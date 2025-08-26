@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Master | Loan Offer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">Credit Master</div>
+            <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+            <nav>
+                <ul id="nav-menu">
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#eligibility">Eligibility</a></li>
+                    <li><a href="index.html#process">How It Works</a></li>
+                    <li><a href="index.html#loan-form">Loan Application</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section" id="offer">
+        <div class="offer-container">
+            <div class="offer-header">
+                <h2>Congratulations! Your Rs.<span id="loan-amount"></span> Pre-Approval Personal Loan Offer Processing Confirmed</h2>
+                <p>Rs.<span id="fee-amount"></span></p>
+            </div>
+            <h3>Choose Your EMI Tenure</h3>
+            <div class="emi-options" id="emi-options">
+                <!-- EMI options will be populated by JavaScript -->
+            </div>
+            <div class="emi-chart">
+                <h3>EMI Breakdown</h3>
+                <canvas id="emiChart"></canvas>
+            </div>
+            <div class="pay-details">
+                <h3>Pay Details</h3>
+                <p>Rs.<span id="base-fee"></span></p>
+                <p>+18% GST: Rs.<span id="gst-amount"></span></p>
+                <p>Total: Rs.<span id="total-amount"></span></p>
+                <button onclick="initiatePayment()">Pay Now</button>
+            </div>
+            <div class="application-details">
+                <h3>Application Details</h3>
+                <p>Loan Amount: Rs.<span id="app-loan-amount"></span></p>
+                <p>Applicant Name: <span id="app-name"></span></p>
+                <p>Mobile No: <span id="app-phone"></span></p>
+                <p>Email Address: <span id="app-email"></span></p>
+                <p>City: <span id="app-city"></span></p>
+                <p>State: <span id="app-state"></span></p>
+                <p>Occupation: <span id="app-occupation"></span></p>
+            </div>
+            <div class="plan-benefits">
+                <h3>Plan Benefits</h3>
+                <ul>
+                    <li>Loan Process in multiple NBFCs</li>
+                    <li>100% Online Financial Consultation</li>
+                    <li>Access Personalized tracking Portal</li>
+                    <li>Dedicated Loan Expert Assigned</li>
+                    <li>No Impact On Cibil</li>
+                    <li>Plan Validity: 6 Months</li>
+                    <li>Loan Processing Time: 48 Hours</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h4>About Us</h4>
+                <p>With the primary goal of facilitating ease and helping people achieve their financial goals faster, CREDIT MASTER Flycredit is your one-stop solution for getting top-notch financial consultation and services.</p>
+            </div>
+            <div class="footer-services">
+                <h4>Our Services</h4>
+                <ul>
+                    <li>Personal Financial Consultation</li>
+                </ul>
+            </div>
+            <div class="footer-nav">
+                <h4>GET FREE LINKS</h4>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#eligibility">Eligibility</a></li>
+                    <li><a href="index.html#process">How It Works</a></li>
+                    <li><a href="index.html#loan-form">Loan Application</a></li>
+                </ul>
+            </div>
+            <div class="contact-us">
+                <h4>Contact Us</h4>
+                <p>Email: creditmaster500@gmail.com</p>
+                <p>Phone: +91 8855 991071</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Credit Master. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="offer.js"></script>
+</body>
+</html>
