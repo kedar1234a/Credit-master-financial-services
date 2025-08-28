@@ -131,12 +131,15 @@ function initiatePayment() {
     }
 
     const { name, email, phone, total } = formData;
-    // Construct Razorpay link with query parameters
-    const successUrl = encodeURIComponent(window.location.origin + '/success.html');
+    const successUrl = encodeURIComponent('https://yourdomain.com/success.html'); // Replace with your live URL
     const paymentLink = `${RAZORPAY_PAYMENT_LINK}?amount=${total * 100}&prefill[name]=${encodeURIComponent(name)}&prefill[email]=${encodeURIComponent(email)}&prefill[contact]=${encodeURIComponent(phone)}&callback_url=${successUrl}`;
-    window.location.href = paymentLink;
+    try {
+        window.location.href = paymentLink;
+    } catch (error) {
+        console.error('Payment initiation failed:', error);
+        alert('Failed to initiate payment. Please try again or contact support.');
+    }
 }
-
 // Ensure DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     populateOfferPage();
