@@ -38,7 +38,7 @@ function sendOTP() {
     document.getElementById('send-otp').disabled = true;
     document.getElementById('send-otp').textContent = 'Sending OTP...';
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQA5ofyTlhG0PlAuOsp0LRMfMqYBrz0B5FVHzBgx_VXxMFjzgD51cc8vkM8ltgf8LtfA/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9AIvgHZBTt32yLQ5ciyykJYebw6p9a0RttuHxrZli4sO10OqcXlDbOaZPBCGfx7OQZg/exec';
 
     fetch(`${scriptUrl}?type=sendOTP&email=${encodeURIComponent(email)}`)
         .then(response => response.json())
@@ -69,7 +69,7 @@ function verifyOTP() {
         return;
     }
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQA5ofyTlhG0PlAuOsp0LRMfMqYBrz0B5FVHzBgx_VXxMFjzgD51cc8vkM8ltgf8LtfA/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9AIvgHZBTt32yLQ5ciyykJYebw6p9a0RttuHxrZli4sO10OqcXlDbOaZPBCGfx7OQZg/exec';
 
     fetch(`${scriptUrl}?type=verifyOTP&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`)
         .then(response => response.json())
@@ -90,93 +90,101 @@ function verifyOTP() {
 }
 
 function submitForm() {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
-    const city = document.getElementById('city').value;
-    const state = document.getElementById('state').value;
-    const financialAmount = document.getElementById('financial-amount').value;
-    const occupation = document.getElementById('occupation').value;
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const city = document.getElementById('city').value;
+  const state = document.getElementById('state').value;
+  const financialAmount = document.getElementById('financial-amount').value;
+  const occupation = document.getElementById('occupation').value;
 
-    if (!name || !email || !phone || !city || !state || !financialAmount || !occupation) {
-        alert('Please fill all fields.');
-        return;
-    }
+  if (!name || !email || !phone || !city || !state || !financialAmount || !occupation) {
+    alert('Please fill all fields.');
+    return;
+  }
 
-    if (!validateName(name)) {
-        alert('Please enter a valid full name (first and last name, letters only).');
-        return;
-    }
+  if (!validateName(name)) {
+    alert('Please enter a valid full name (first and last name, letters only).');
+    return;
+  }
 
-    if (!validateEmail(email)) {
-        alert('Please enter a valid email address.');
-        return;
-    }
+  if (!validateEmail(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
 
-    if (!validatePhone(phone)) {
-        alert('Please enter a valid 10-digit phone number.');
-        return;
-    }
+  if (!validatePhone(phone)) {
+    alert('Please enter a valid 10-digit phone number.');
+    return;
+  }
 
-    if (!isEmailVerified) {
-        alert('Please verify your email with OTP.');
-        return;
-    }
+  if (!isEmailVerified) {
+    alert('Please verify your email with OTP.');
+    return;
+  }
 
-    const principal = parseFloat(financialAmount);
-    const possibleFees = [199, 299];
-    const fee = possibleFees[Math.floor(Math.random() * possibleFees.length)];
-    const gst = fee * 0.18;
-    const total = Math.round(fee + gst);
+  const principal = parseFloat(financialAmount);
+  if (isNaN(principal)) {
+    alert('Please enter a valid financial amount.');
+    return;
+  }
 
-    // Prepare form data for Google Sheets
-    const formData = {
-        timestamp: new Date().toISOString(),
-        name,
-        email,
-        phone,
-        city,
-        state,
-        financialAmount,
-        occupation,
-        processingFee: total
-    };
+  const possibleFees = [199, 299];
+  const fee = possibleFees[Math.floor(Math.random() * possibleFees.length)];
+  const gst = fee * 0.18;
+  const total = Math.round(fee + gst);
 
-    // Send data to Google Sheets
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQA5ofyTlhG0PlAuOsp0LRMfMqYBrz0B5FVHzBgx_VXxMFjzgD51cc8vkM8ltgf8LtfA/exec';
+  const formData = {
+    timestamp: new Date().toISOString(),
+    name,
+    email,
+    phone,
+    city,
+    state,
+    financialAmount,
+    occupation,
+    processingFee: total
+  };
 
-    fetch(scriptUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+  console.log('Sending formData:', formData); // Log the data being sent
+
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9AIvgHZBTt32yLQ5ciyykJYebw6p9a0RttuHxrZli4sO10OqcXlDbOaZPBCGfx7OQZg/exec';
+
+  fetch(scriptUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
     })
-    .then(response => response.json())
     .then(data => {
-        if (data.status === 'success') {
-            // Store form data in sessionStorage for offer page
-            sessionStorage.setItem('formData', JSON.stringify({
-                name,
-                email,
-                phone,
-                city,
-                state,
-                financialAmount,
-                occupation,
-                fee,
-                gst,
-                total
-            }));
-
-            // Redirect to offer page
-            window.location.href = 'offer.html';
-        } else {
-            alert('Error: ' + data.message);
-        }
+      console.log('Response from server:', data); // Log the server response
+      if (data.status === 'success') {
+        sessionStorage.setItem('formData', JSON.stringify({
+          name,
+          email,
+          phone,
+          city,
+          state,
+          financialAmount,
+          occupation,
+          fee,
+          gst,
+          total
+        }));
+        window.location.href = 'offer.html';
+      } else {
+        alert('Error: ' + data.message);
+      }
     })
     .catch(error => {
-        console.error('Error saving to Google Sheets:', error);
-        alert('Error saving form data. Please try again.');
+      console.error('Error saving to Google Sheets:', error);
+      alert('Error saving form data: ' + error.message + '. Please try again.');
     });
 }
