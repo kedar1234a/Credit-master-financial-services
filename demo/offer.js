@@ -1,5 +1,5 @@
 const RAZORPAY_PAYMENT_LINK = 'https://razorpay.me/@creditmaster';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
 
 // Toggle mobile menu
 function toggleMenu() {
@@ -71,7 +71,7 @@ function populateOfferPage() {
         `;
     });
 
-    // EMI chart (unchanged)
+    // EMI chart
     const ctx = document.getElementById('emiChart');
     if (ctx) {
         new Chart(ctx.getContext('2d'), {
@@ -131,7 +131,8 @@ function initiatePayment() {
     }
 
     const { name, email, phone, total } = formData;
-    const successUrl = encodeURIComponent('https://yourdomain.com/success.html'); // Replace with your live URL
+    // Replace 'https://yourdomain.com' with your actual domain where success.html is hosted
+    const successUrl = encodeURIComponent(`https://yourdomain.com/success.html?email=${encodeURIComponent(email)}`);
     const paymentLink = `${RAZORPAY_PAYMENT_LINK}?amount=${total * 100}&prefill[name]=${encodeURIComponent(name)}&prefill[email]=${encodeURIComponent(email)}&prefill[contact]=${encodeURIComponent(phone)}&callback_url=${successUrl}`;
     try {
         window.location.href = paymentLink;

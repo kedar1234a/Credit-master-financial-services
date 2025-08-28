@@ -12,11 +12,11 @@
         <p>Processing your payment... Please wait.</p>
     </div>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
 
         // Parse URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get('payment_id');
+        const paymentId = urlParams.get('razorpay_payment_id');
         const email = urlParams.get('email');
 
         if (paymentId && email && paymentId.trim() !== '' && email.trim() !== '') {
@@ -38,12 +38,19 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                // Clear sessionStorage only after successful update
-                sessionStorage.removeItem('formData');
-                // Redirect after a short delay to ensure server processes
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000); // 1-second delay
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    // Clear sessionStorage only after successful update
+                    sessionStorage.removeItem('formData');
+                    // Redirect after a short delay to ensure server processes
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000); // 1-second delay
+                } else {
+                    throw new Error(data.message);
+                }
             })
             .catch(error => {
                 console.error('Error updating payment status:', error);

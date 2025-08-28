@@ -147,29 +147,33 @@ function submitForm() {
 
     fetch(scriptUrl, {
         method: 'POST',
-        mode: 'no-cors', // Use no-cors to avoid CORS issues with Google Apps Script
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     })
-    .then(() => {
-        // Store form data in sessionStorage for offer page
-        sessionStorage.setItem('formData', JSON.stringify({
-            name,
-            email,
-            phone,
-            city,
-            state,
-            financialAmount,
-            occupation,
-            fee,
-            gst,
-            total
-        }));
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Store form data in sessionStorage for offer page
+            sessionStorage.setItem('formData', JSON.stringify({
+                name,
+                email,
+                phone,
+                city,
+                state,
+                financialAmount,
+                occupation,
+                fee,
+                gst,
+                total
+            }));
 
-        // Redirect to offer page
-        window.location.href = 'offer.html';
+            // Redirect to offer page
+            window.location.href = 'offer.html';
+        } else {
+            alert('Error: ' + data.message);
+        }
     })
     .catch(error => {
         console.error('Error saving to Google Sheets:', error);
