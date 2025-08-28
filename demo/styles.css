@@ -930,3 +930,33 @@ footer,
 .plan-benefits ul li:hover {
     transform: translateX(5px);
 }
+
+/* styles.css */
+.emi-chart {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.emi-chart canvas {
+    width: 100% !important;
+    height: 300px !important; /* Adjust height as needed */
+    max-height: 300px;
+}
+
+.offer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.section {
+    padding: 40px 20px;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+    .emi-chart canvas {
+        height: 200px !important;
+    }
+}
