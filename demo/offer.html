@@ -25,23 +25,23 @@
         </div>
     </header>
 
-   <section class="section" id="offer">
-    <div class="offer-container">
-        <div class="offer-header">
-            <h2>Congratulations! Your Rs.<span id="loan-amount"></span> Pre-Approval Personal Loan Offer Processing Confirmed</h2>
-            <p>Rs.<span id="fee-amount"></span></p>
-        </div>
-        <h3>Choose Your EMI Tenure</h3>
-        <div class="emi-options" id="emi-options">
-            <!-- EMI options will be populated by JavaScript -->
-        </div>
-        <div class="emi-chart">
-            <h3>EMI Breakdown</h3>
-            <canvas id="emiChart" style="max-height: 300px;"></canvas>
-        </div>
+    <section class="section" id="offer">
+        <div class="offer-container">
+            <div class="offer-header">
+                <h2>Congratulations! Your Rs.<span id="loan-amount"></span> Pre-Approval Personal Loan Offer Processing Confirmed</h2>
+                <p>Processing Fee: Rs.<span id="fee-amount"></span></p>
+            </div>
+            <h3>Choose Your EMI Tenure</h3>
+            <div class="emi-options" id="emi-options">
+                <!-- EMI options will be populated by JavaScript -->
+            </div>
+            <div class="emi-chart">
+                <h3>EMI Breakdown</h3>
+                <canvas id="emiChart" style="max-height: 300px;"></canvas>
+            </div>
             <div class="pay-details">
                 <h3>Pay Details</h3>
-                <p>Rs.<span id="base-fee"></span></p>
+                <p>Base Fee: Rs.<span id="base-fee"></span></p>
                 <p>+18% GST: Rs.<span id="gst-amount"></span></p>
                 <p>Total: Rs.<span id="total-amount"></span></p>
                 <button onclick="initiatePayment()">Pay Now</button>
@@ -111,4 +111,4 @@
 
     <script src="offer.js"></script>
 </body>
-</html> 
+</html>

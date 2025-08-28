@@ -1,4 +1,3 @@
-// script.js
 let isEmailVerified = false;
 
 function toggleMenu() {
@@ -39,14 +38,22 @@ function sendOTP() {
     document.getElementById('send-otp').disabled = true;
     document.getElementById('send-otp').textContent = 'Sending OTP...';
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzWXL3Vi8o08TppDxZcAxeQAjL1K4ObcAtNU6a8FxfXkC-QddkjH7dZgqExi6u2gd7-Uw/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4yKMuhMTrgR62b9M40yhBilhulnQBlAXBAU_poCrIGT6mFXtIGTressjlKkdcTY5rAw/exec';
 
-    fetch(`${scriptUrl}?type=sendOTP&email=${encodeURIComponent(email)}`)
-        .then(response => response.json())
+    fetch(`${scriptUrl}?type=sendOTP&email=${encodeURIComponent(email)}`, {
+        method: 'GET',
+        mode: 'cors'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.status === 'success') {
                 alert('OTP sent to ' + email + '. Please check your email.');
-                document.getElementById('otp-section').classList.add('active');
+                document.getElementById('otp-section').style.display = 'block';
             } else {
                 alert('Error: ' + data.message);
             }
@@ -55,7 +62,7 @@ function sendOTP() {
         })
         .catch(error => {
             console.error('Error sending OTP:', error);
-            alert('Error sending OTP. Please try again. Ensure the Google Apps Script URL is correct and deployed.');
+            alert('Error sending OTP. Please try again or contact support at creditmaster500@gmail.com.');
             document.getElementById('send-otp').disabled = false;
             document.getElementById('send-otp').textContent = 'Send OTP';
         });
@@ -70,16 +77,24 @@ function verifyOTP() {
         return;
     }
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzWXL3Vi8o08TppDxZcAxeQAjL1K4ObcAtNU6a8FxfXkC-QddkjH7dZgqExi6u2gd7-Uw/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4yKMuhMTrgR62b9M40yhBilhulnQBlAXBAU_poCrIGT6mFXtIGTressjlKkdcTY5rAw/exec';
 
-    fetch(`${scriptUrl}?type=verifyOTP&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`)
-        .then(response => response.json())
+    fetch(`${scriptUrl}?type=verifyOTP&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
+        method: 'GET',
+        mode: 'cors'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.status === 'success') {
                 alert('Email verified successfully!');
                 isEmailVerified = true;
                 document.getElementById('submit-form').disabled = false;
-                document.getElementById('otp-section').classList.remove('active');
+                document.getElementById('otp-section').style.display = 'none';
             } else {
                 alert('Error: ' + data.message);
             }
@@ -91,101 +106,102 @@ function verifyOTP() {
 }
 
 function submitForm() {
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const phone = document.getElementById('phone').value;
-  const city = document.getElementById('city').value;
-  const state = document.getElementById('state').value;
-  const financialAmount = document.getElementById('financial-amount').value;
-  const occupation = document.getElementById('occupation').value;
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const city = document.getElementById('city').value;
+    const state = document.getElementById('state').value;
+    const financialAmount = document.getElementById('financial-amount').value;
+    const occupation = document.getElementById('occupation').value;
 
-  if (!name || !email || !phone || !city || !state || !financialAmount || !occupation) {
-    alert('Please fill all fields.');
-    return;
-  }
+    if (!name || !email || !phone || !city || !state || !financialAmount || !occupation) {
+        alert('Please fill all fields.');
+        return;
+    }
 
-  if (!validateName(name)) {
-    alert('Please enter a valid full name (first and last name, letters only).');
-    return;
-  }
+    if (!validateName(name)) {
+        alert('Please enter a valid full name (first and last name, letters only).');
+        return;
+    }
 
-  if (!validateEmail(email)) {
-    alert('Please enter a valid email address.');
-    return;
-  }
+    if (!validateEmail(email)) {
+        alert('Please enter a valid email address.');
+        return;
+    }
 
-  if (!validatePhone(phone)) {
-    alert('Please enter a valid 10-digit phone number.');
-    return;
-  }
+    if (!validatePhone(phone)) {
+        alert('Please enter a valid 10-digit phone number.');
+        return;
+    }
 
-  if (!isEmailVerified) {
-    alert('Please verify your email with OTP.');
-    return;
-  }
+    if (!isEmailVerified) {
+        alert('Please verify your email with OTP.');
+        return;
+    }
 
-  const principal = parseFloat(financialAmount);
-  if (isNaN(principal)) {
-    alert('Please enter a valid financial amount.');
-    return;
-  }
+    const principal = parseFloat(financialAmount);
+    if (isNaN(principal)) {
+        alert('Please enter a valid financial amount.');
+        return;
+    }
 
-  const possibleFees = [199, 299];
-  const fee = possibleFees[Math.floor(Math.random() * possibleFees.length)];
-  const gst = fee * 0.18;
-  const total = Math.round(fee + gst);
+    const possibleFees = [199, 299];
+    const fee = possibleFees[Math.floor(Math.random() * possibleFees.length)];
+    const gst = fee * 0.18;
+    const total = Math.round(fee + gst);
 
-  const formData = {
-    timestamp: new Date().toISOString(),
-    name,
-    email,
-    phone,
-    city,
-    state,
-    financialAmount,
-    occupation,
-    processingFee: total
-  };
+    const formData = {
+        timestamp: new Date().toISOString(),
+        name,
+        email,
+        phone,
+        city,
+        state,
+        financialAmount,
+        occupation,
+        processingFee: total
+    };
 
-  console.log('Sending formData:', formData); // Log the data being sent
+    console.log('Sending formData:', formData);
 
-  const scriptUrl = 'https://script.google.com/macros/s/AKfycbzWXL3Vi8o08TppDxZcAxeQAjL1K4ObcAtNU6a8FxfXkC-QddkjH7dZgqExi6u2gd7-Uw/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4yKMuhMTrgR62b9M40yhBilhulnQBlAXBAU_poCrIGT6mFXtIGTressjlKkdcTY5rAw/exec';
 
-  fetch(scriptUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
+    fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
     })
-    .then(data => {
-      console.log('Response from server:', data); // Log the server response
-      if (data.status === 'success') {
-        sessionStorage.setItem('formData', JSON.stringify({
-          name,
-          email,
-          phone,
-          city,
-          state,
-          financialAmount,
-          occupation,
-          fee,
-          gst,
-          total
-        }));
-        window.location.href = 'offer.html';
-      } else {
-        alert('Error: ' + data.message);
-      }
-    })
-    .catch(error => {
-      console.error('Error saving to Google Sheets:', error);
-      alert('Error saving form data: ' + error.message + '. Please try again.');
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response from server:', data);
+            if (data.status === 'success') {
+                sessionStorage.setItem('formData', JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    city,
+                    state,
+                    financialAmount,
+                    occupation,
+                    fee,
+                    gst,
+                    total
+                }));
+                window.location.href = 'offer.html';
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error saving to Google Sheets:', error);
+            alert('Error saving form data: ' + error.message + '. Please try again or contact support at creditmaster500@gmail.com.');
+        });
 }

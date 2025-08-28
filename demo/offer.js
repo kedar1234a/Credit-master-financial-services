@@ -1,13 +1,10 @@
-// offer.js
 const RAZORPAY_PAYMENT_LINK = 'https://razorpay.me/@creditmaster';
 
-// Toggle mobile menu
 function toggleMenu() {
     const menu = document.getElementById('nav-menu');
     menu.classList.toggle('active');
 }
 
-// Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -20,7 +17,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Calculate EMI
 function calculateEMI(principal, annualRate, years) {
     const monthlyRate = annualRate / 12 / 100;
     const months = years * 12;
@@ -28,7 +24,6 @@ function calculateEMI(principal, annualRate, years) {
     return isFinite(emi) ? emi.toFixed(2) : 0;
 }
 
-// Populate offer page
 function populateOfferPage() {
     const formData = JSON.parse(sessionStorage.getItem('formData'));
     if (!formData) {
@@ -71,7 +66,6 @@ function populateOfferPage() {
         `;
     });
 
-    // EMI chart
     const ctx = document.getElementById('emiChart');
     if (ctx) {
         new Chart(ctx.getContext('2d'), {
@@ -121,7 +115,6 @@ function populateOfferPage() {
     }
 }
 
-// Initiate payment with Razorpay link
 function initiatePayment() {
     const formData = JSON.parse(sessionStorage.getItem('formData'));
     if (!formData) {
@@ -131,7 +124,7 @@ function initiatePayment() {
     }
 
     const { name, email, phone, total } = formData;
-    const successUrl = encodeURIComponent(`${window.location.origin}/success.html?email=${encodeURIComponent(email)}`);
+    const successUrl = encodeURIComponent(`https://creditmasterfinancialservices.web.app/success.html?email=${encodeURIComponent(email)}`);
     const paymentLink = `https://rzp.io/l/creditmaster?amount=${total * 100}&prefill[name]=${encodeURIComponent(name)}&prefill[contact]=${encodeURIComponent(phone)}&prefill[email]=${encodeURIComponent(email)}&callback_url=${successUrl}`;
     
     try {
@@ -142,7 +135,7 @@ function initiatePayment() {
         alert('Failed to initiate payment. Please try again or contact support at creditmaster500@gmail.com.');
     }
 }
-// Ensure DOM is fully loaded
+
 document.addEventListener('DOMContentLoaded', () => {
     populateOfferPage();
 });
