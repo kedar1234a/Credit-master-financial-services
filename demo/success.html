@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Success - Credit Master</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body>
     <div class="success-container">
@@ -12,7 +13,7 @@
         <p>Processing your payment... Please wait.</p>
     </div>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4yKMuhMTrgR62b9M40yhBilhulnQBlAXBAU_poCrIGT6mFXtIGTressjlKkdcTY5rAw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
 
         // Parse URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -20,20 +21,16 @@
         const email = urlParams.get('email');
 
         if (paymentId && email && paymentId.trim() !== '' && email.trim() !== '') {
-            const paymentData = {
+            const params = new URLSearchParams({
                 type: 'updatePayment',
                 email: email,
                 paymentStatus: 'Completed',
                 paymentId: paymentId
-            };
+            });
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(paymentData)
+            fetch(`${SCRIPT_URL}?${params.toString()}`, {
+                method: 'GET',
+                redirect: 'follow'
             })
             .then(response => {
                 if (!response.ok) {

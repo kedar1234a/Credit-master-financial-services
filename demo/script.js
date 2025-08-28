@@ -8,10 +8,11 @@ function toggleMenu() {
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-        document.getElementById('nav-menu').classList.remove('active');
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('nav-menu').classList.remove('active');
+        }
     });
 });
 
@@ -38,11 +39,12 @@ function sendOTP() {
     document.getElementById('send-otp').disabled = true;
     document.getElementById('send-otp').textContent = 'Sending OTP...';
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4yKMuhMTrgR62b9M40yhBilhulnQBlAXBAU_poCrIGT6mFXtIGTressjlKkdcTY5rAw/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
+    const params = new URLSearchParams({ type: 'sendOTP', email });
 
-    fetch(`${scriptUrl}?type=sendOTP&email=${encodeURIComponent(email)}`, {
+    fetch(`${scriptUrl}?${params.toString()}`, {
         method: 'GET',
-        mode: 'cors'
+        redirect: 'follow'
     })
         .then(response => {
             if (!response.ok) {
@@ -55,14 +57,14 @@ function sendOTP() {
                 alert('OTP sent to ' + email + '. Please check your email.');
                 document.getElementById('otp-section').style.display = 'block';
             } else {
-                alert('Error: ' + data.message);
+                alert('Error: ' + (data.message || 'Failed to send OTP. Please try again.'));
             }
             document.getElementById('send-otp').textContent = 'Send OTP';
             document.getElementById('send-otp').disabled = false;
         })
         .catch(error => {
             console.error('Error sending OTP:', error);
-            alert('Error sending OTP. Please try again or contact support at creditmaster500@gmail.com.');
+            alert('Error sending OTP: ' + error.message + '. Please try again or contact support at creditmaster500@gmail.com.');
             document.getElementById('send-otp').disabled = false;
             document.getElementById('send-otp').textContent = 'Send OTP';
         });
@@ -77,11 +79,12 @@ function verifyOTP() {
         return;
     }
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4yKMuhMTrgR62b9M40yhBilhulnQBlAXBAU_poCrIGT6mFXtIGTressjlKkdcTY5rAw/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
+    const params = new URLSearchParams({ type: 'verifyOTP', email, otp });
 
-    fetch(`${scriptUrl}?type=verifyOTP&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
+    fetch(`${scriptUrl}?${params.toString()}`, {
         method: 'GET',
-        mode: 'cors'
+        redirect: 'follow'
     })
         .then(response => {
             if (!response.ok) {
@@ -96,12 +99,12 @@ function verifyOTP() {
                 document.getElementById('submit-form').disabled = false;
                 document.getElementById('otp-section').style.display = 'none';
             } else {
-                alert('Error: ' + data.message);
+                alert('Error: ' + (data.message || 'Failed to verify OTP. Please try again.'));
             }
         })
         .catch(error => {
             console.error('Error verifying OTP:', error);
-            alert('Invalid OTP or error verifying. Please try again.');
+            alert('Invalid OTP or error verifying: ' + error.message + '. Please try again.');
         });
 }
 
@@ -140,8 +143,8 @@ function submitForm() {
     }
 
     const principal = parseFloat(financialAmount);
-    if (isNaN(principal)) {
-        alert('Please enter a valid financial amount.');
+    if (isNaN(principal) || principal < 1000) {
+        alert('Please enter a valid financial amount (minimum ₹1000).');
         return;
     }
 
@@ -151,6 +154,7 @@ function submitForm() {
     const total = Math.round(fee + gst);
 
     const formData = {
+        type: 'formSubmission', // Added to fix "Invalid request type"
         timestamp: new Date().toISOString(),
         name,
         email,
@@ -162,17 +166,12 @@ function submitForm() {
         processingFee: total
     };
 
-    console.log('Sending formData:', formData);
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
+    const params = new URLSearchParams(formData);
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw4yKMuhMTrgR62b9M40yhBilhulnQBlAXBAU_poCrIGT6mFXtIGTressjlKkdcTY5rAw/exec';
-
-    fetch(scriptUrl, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+    fetch(`${scriptUrl}?${params.toString()}`, {
+        method: 'GET',
+        redirect: 'follow'
     })
         .then(response => {
             if (!response.ok) {
@@ -197,7 +196,7 @@ function submitForm() {
                 }));
                 window.location.href = 'offer.html';
             } else {
-                alert('Error: ' + data.message);
+                alert('Error: ' + (data.message || 'Failed to save form data. Please try again.'));
             }
         })
         .catch(error => {
