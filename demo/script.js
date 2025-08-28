@@ -125,7 +125,7 @@ function submitForm() {
     }
 
     const principal = parseFloat(financialAmount);
-    const possibleFees = [199, 299];
+    const possibleFees = [1, 2];
     const fee = possibleFees[Math.floor(Math.random() * possibleFees.length)];
     const gst = fee * 0.18;
     const total = Math.round(fee + gst);
