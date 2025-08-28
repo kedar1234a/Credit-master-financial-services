@@ -1,3 +1,4 @@
+// script.js
 let isEmailVerified = false;
 
 function toggleMenu() {
@@ -38,7 +39,7 @@ function sendOTP() {
     document.getElementById('send-otp').disabled = true;
     document.getElementById('send-otp').textContent = 'Sending OTP...';
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9AIvgHZBTt32yLQ5ciyykJYebw6p9a0RttuHxrZli4sO10OqcXlDbOaZPBCGfx7OQZg/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzWXL3Vi8o08TppDxZcAxeQAjL1K4ObcAtNU6a8FxfXkC-QddkjH7dZgqExi6u2gd7-Uw/exec';
 
     fetch(`${scriptUrl}?type=sendOTP&email=${encodeURIComponent(email)}`)
         .then(response => response.json())
@@ -69,7 +70,7 @@ function verifyOTP() {
         return;
     }
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9AIvgHZBTt32yLQ5ciyykJYebw6p9a0RttuHxrZli4sO10OqcXlDbOaZPBCGfx7OQZg/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzWXL3Vi8o08TppDxZcAxeQAjL1K4ObcAtNU6a8FxfXkC-QddkjH7dZgqExi6u2gd7-Uw/exec';
 
     fetch(`${scriptUrl}?type=verifyOTP&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`)
         .then(response => response.json())
@@ -148,7 +149,7 @@ function submitForm() {
 
   console.log('Sending formData:', formData); // Log the data being sent
 
-  const scriptUrl = 'https://script.google.com/macros/s/AKfycbx9AIvgHZBTt32yLQ5ciyykJYebw6p9a0RttuHxrZli4sO10OqcXlDbOaZPBCGfx7OQZg/exec';
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbzWXL3Vi8o08TppDxZcAxeQAjL1K4ObcAtNU6a8FxfXkC-QddkjH7dZgqExi6u2gd7-Uw/exec';
 
   fetch(scriptUrl, {
     method: 'POST',

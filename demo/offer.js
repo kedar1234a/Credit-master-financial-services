@@ -1,5 +1,5 @@
+// offer.js
 const RAZORPAY_PAYMENT_LINK = 'https://razorpay.me/@creditmaster';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
 
 // Toggle mobile menu
 function toggleMenu() {
@@ -122,7 +122,6 @@ function populateOfferPage() {
 }
 
 // Initiate payment with Razorpay link
-// Initiate payment with Razorpay link
 function initiatePayment() {
     const formData = JSON.parse(sessionStorage.getItem('formData'));
     if (!formData) {
@@ -132,8 +131,7 @@ function initiatePayment() {
     }
 
     const { name, email, phone, total } = formData;
-    // Replace 'https://yourdomain.com' with your actual domain where success.html is hosted
-    const successUrl = encodeURIComponent(`https://yourdomain.com/success.html?email=${encodeURIComponent(email)}`);
+    const successUrl = encodeURIComponent(`${window.location.origin}/success.html?email=${encodeURIComponent(email)}`);
     const paymentLink = `https://rzp.io/l/creditmaster?amount=${total * 100}&prefill[name]=${encodeURIComponent(name)}&prefill[contact]=${encodeURIComponent(phone)}&prefill[email]=${encodeURIComponent(email)}&callback_url=${successUrl}`;
     
     try {
