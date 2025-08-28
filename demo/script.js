@@ -38,7 +38,7 @@ function sendOTP() {
     document.getElementById('send-otp').disabled = true;
     document.getElementById('send-otp').textContent = 'Sending OTP...';
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQA5ofyTlhG0PlAuOsp0LRMfMqYBrz0B5FVHzBgx_VXxMFjzgD51cc8vkM8ltgf8LtfA/exec';
 
     fetch(`${scriptUrl}?type=sendOTP&email=${encodeURIComponent(email)}`)
         .then(response => response.json())
@@ -69,7 +69,7 @@ function verifyOTP() {
         return;
     }
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQA5ofyTlhG0PlAuOsp0LRMfMqYBrz0B5FVHzBgx_VXxMFjzgD51cc8vkM8ltgf8LtfA/exec';
 
     fetch(`${scriptUrl}?type=verifyOTP&email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`)
         .then(response => response.json())
@@ -143,7 +143,7 @@ function submitForm() {
     };
 
     // Send data to Google Sheets
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwQA5ofyTlhG0PlAuOsp0LRMfMqYBrz0B5FVHzBgx_VXxMFjzgD51cc8vkM8ltgf8LtfA/exec';
 
     fetch(scriptUrl, {
         method: 'POST',
