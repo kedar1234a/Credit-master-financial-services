@@ -1,4 +1,3 @@
-
 let isEmailVerified = false;
 
 function toggleMenu() {
@@ -130,8 +129,9 @@ function submitForm() {
     const gst = fee * 0.18;
     const total = Math.round(fee + gst);
 
-    // Store form data in sessionStorage
+    // Prepare form data for Google Sheets
     const formData = {
+        timestamp: new Date().toISOString(),
         name,
         email,
         phone,
@@ -139,12 +139,40 @@ function submitForm() {
         state,
         financialAmount,
         occupation,
-        fee,
-        gst,
-        total
+        processingFee: total
     };
-    sessionStorage.setItem('formData', JSON.stringify(formData));
 
-    // Redirect to offer page
-    window.location.href = 'offer.html';
+    // Send data to Google Sheets
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
+
+    fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors', // Use no-cors to avoid CORS issues with Google Apps Script
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(() => {
+        // Store form data in sessionStorage for offer page
+        sessionStorage.setItem('formData', JSON.stringify({
+            name,
+            email,
+            phone,
+            city,
+            state,
+            financialAmount,
+            occupation,
+            fee,
+            gst,
+            total
+        }));
+
+        // Redirect to offer page
+        window.location.href = 'offer.html';
+    })
+    .catch(error => {
+        console.error('Error saving to Google Sheets:', error);
+        alert('Error saving form data. Please try again.');
+    });
 }
