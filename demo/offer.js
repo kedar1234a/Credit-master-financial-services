@@ -122,6 +122,7 @@ function populateOfferPage() {
 }
 
 // Initiate payment with Razorpay link
+// Initiate payment with Razorpay link
 function initiatePayment() {
     const formData = JSON.parse(sessionStorage.getItem('formData'));
     if (!formData) {
@@ -133,12 +134,14 @@ function initiatePayment() {
     const { name, email, phone, total } = formData;
     // Replace 'https://yourdomain.com' with your actual domain where success.html is hosted
     const successUrl = encodeURIComponent(`https://yourdomain.com/success.html?email=${encodeURIComponent(email)}`);
-    const paymentLink = `${RAZORPAY_PAYMENT_LINK}?amount=${total * 100}&prefill[name]=${encodeURIComponent(name)}&prefill[email]=${encodeURIComponent(email)}&prefill[contact]=${encodeURIComponent(phone)}&callback_url=${successUrl}`;
+    const paymentLink = `https://rzp.io/l/creditmaster?amount=${total * 100}&prefill[name]=${encodeURIComponent(name)}&prefill[contact]=${encodeURIComponent(phone)}&prefill[email]=${encodeURIComponent(email)}&callback_url=${successUrl}`;
+    
     try {
+        console.log('Initiating payment with URL:', paymentLink);
         window.location.href = paymentLink;
     } catch (error) {
         console.error('Payment initiation failed:', error);
-        alert('Failed to initiate payment. Please try again or contact support.');
+        alert('Failed to initiate payment. Please try again or contact support at creditmaster500@gmail.com.');
     }
 }
 // Ensure DOM is fully loaded

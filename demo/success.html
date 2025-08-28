@@ -11,57 +11,56 @@
         <h2>Payment Successful</h2>
         <p>Processing your payment... Please wait.</p>
     </div>
-    <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
+   <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQd3bBCfzwr5P7EyycKMrz7IR_724usPpxP5Xa0gXmyeeLYqL_wJsvu5rKSf-1_-e3mQ/exec';
 
-        // Parse URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get('razorpay_payment_id');
-        const email = urlParams.get('email');
+    // Parse URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentId = urlParams.get('razorpay_payment_id') || urlParams.get('payment_id');
+    const email = urlParams.get('email');
 
-        if (paymentId && email && paymentId.trim() !== '' && email.trim() !== '') {
-            const paymentData = {
-                type: 'updatePayment',
-                email: email,
-                paymentStatus: 'Completed',
-                paymentId: paymentId
-            };
+    if (paymentId && email && paymentId.trim() !== '' && email.trim() !== '') {
+        const paymentData = {
+            type: 'updatePayment',
+            email: email,
+            paymentStatus: 'Completed',
+            paymentId: paymentId
+        };
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(paymentData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    // Clear sessionStorage only after successful update
-                    sessionStorage.removeItem('formData');
-                    // Redirect after a short delay to ensure server processes
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1000); // 1-second delay
-                } else {
-                    throw new Error(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error updating payment status:', error);
-                // Preserve sessionStorage in case of failure
-                alert('Payment successful, but failed to update status. Please contact support with payment ID: ' + paymentId);
-                window.location.href = 'index.html';
-            });
-        } else {
-            alert('Invalid payment data. Please contact support.');
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                console.log('Payment status updated successfully:', data);
+                sessionStorage.removeItem('formData');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            } else {
+                throw new Error(data.message || 'Failed to update payment status');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating payment status:', error);
+            alert(`Payment successful, but failed to update status. Please contact support with payment ID: ${paymentId}`);
             window.location.href = 'index.html';
-        }
-    </script>
+        });
+    } else {
+        console.error('Invalid payment data:', { paymentId, email });
+        alert('Invalid payment data. Please contact support at creditmaster500@gmail.com.');
+        window.location.href = 'index.html';
+    }
+</script>
 </body>
 </html>
