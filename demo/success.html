@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success - Credit Master</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="success-container">
+        <h2>Payment Successful</h2>
+        <p>Processing your payment... Please wait.</p>
+    </div>
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
+
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id');
+        const email = urlParams.get('email');
+
+        if (paymentId && email) {
+            const paymentData = {
+                type: 'updatePayment',
+                email: email,
+                paymentStatus: 'Completed',
+                paymentId: paymentId
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(paymentData)
+            })
+            .then(() => {
+                // Clear sessionStorage
+                sessionStorage.removeItem('formData');
+                // Redirect to index.html
+                window.location.href = 'index.html';
+            })
+            .catch(error => {
+                console.error('Error updating payment status:', error);
+                alert('Payment successful, but failed to update status. Please contact support.');
+                window.location.href = 'index.html';
+            });
+        } else {
+            alert('Invalid payment data. Please contact support.');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

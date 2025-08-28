@@ -960,3 +960,24 @@ footer,
         height: 200px !important;
     }
 }
+
+.success-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #FEFFFF;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #17252A;
+}
+
+.success-container h2 {
+    color: #2B7A78;
+    margin-bottom: 20px;
+}
+
+.success-container p {
+    color: #17252A;
+    font-size: 1.1em;
+}

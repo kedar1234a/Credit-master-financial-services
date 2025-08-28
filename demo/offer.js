@@ -1,5 +1,5 @@
-// offer.js
-const RAZORPAY_PAYMENT_LINK = "https://razorpay.me/@creditmaster";
+const RAZORPAY_PAYMENT_LINK = 'https://razorpay.me/@creditmaster';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
 
 // Toggle mobile menu
 function toggleMenu() {
@@ -22,15 +22,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Calculate EMI
 function calculateEMI(principal, annualRate, years) {
-    const monthlyRate = annualRate / 12 / 100; // Convert annual rate to monthly and percentage to decimal
+    const monthlyRate = annualRate / 12 / 100;
     const months = years * 12;
     const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
-    return isFinite(emi) ? emi.toFixed(2) : 0; // Handle potential division by zero
+    return isFinite(emi) ? emi.toFixed(2) : 0;
 }
 
 // Populate offer page
 function populateOfferPage() {
-    // Retrieve data from sessionStorage
     const formData = JSON.parse(sessionStorage.getItem('formData'));
     if (!formData) {
         alert('No application data found. Please submit the form again.');
@@ -40,7 +39,6 @@ function populateOfferPage() {
 
     const { name, email, phone, city, state, financialAmount, occupation, fee, gst, total } = formData;
 
-    // Populate applicant details
     document.getElementById('loan-amount').textContent = Number(financialAmount).toLocaleString('en-IN');
     document.getElementById('fee-amount').textContent = Number(fee).toLocaleString('en-IN');
     document.getElementById('base-fee').textContent = Number(fee).toLocaleString('en-IN');
@@ -54,16 +52,14 @@ function populateOfferPage() {
     document.getElementById('app-state').textContent = state || 'N/A';
     document.getElementById('app-occupation').textContent = occupation || 'N/A';
 
-    // Calculate EMI options for 1, 2, and 3 years
     const principal = parseFloat(financialAmount);
-    const annualRate = 0.12; // 12% annual interest rate
+    const annualRate = 0.12;
     const tenures = [1, 2, 3];
     const emiOptions = tenures.map(year => ({
         year,
         emi: calculateEMI(principal, annualRate, year)
     }));
 
-    // Populate EMI options
     const emiOptionsDiv = document.getElementById('emi-options');
     emiOptionsDiv.innerHTML = '';
     emiOptions.forEach(option => {
@@ -75,7 +71,7 @@ function populateOfferPage() {
         `;
     });
 
-    // Create EMI chart
+    // EMI chart (unchanged)
     const ctx = document.getElementById('emiChart');
     if (ctx) {
         new Chart(ctx.getContext('2d'), {
@@ -125,12 +121,23 @@ function populateOfferPage() {
     }
 }
 
-// Initiate payment
+// Initiate payment with Razorpay link
 function initiatePayment() {
-    window.location.href = RAZORPAY_PAYMENT_LINK;
+    const formData = JSON.parse(sessionStorage.getItem('formData'));
+    if (!formData) {
+        alert('No application data found. Please submit the form again.');
+        window.location.href = 'index.html#loan-form';
+        return;
+    }
+
+    const { name, email, phone, total } = formData;
+    // Construct Razorpay link with query parameters
+    const successUrl = encodeURIComponent(window.location.origin + '/success.html');
+    const paymentLink = `${RAZORPAY_PAYMENT_LINK}?amount=${total * 100}&prefill[name]=${encodeURIComponent(name)}&prefill[email]=${encodeURIComponent(email)}&prefill[contact]=${encodeURIComponent(phone)}&callback_url=${successUrl}`;
+    window.location.href = paymentLink;
 }
 
-// Ensure DOM is fully loaded before running the script
+// Ensure DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     populateOfferPage();
 });
