@@ -169,18 +169,7 @@ function initiatePayment() {
         return;
     }
 
-    const { name, email, phone, total } = formData;
-    if (!name || !email || !phone || !total || isNaN(total)) {
-        console.error('Invalid payment data:', { name, email, phone, total });
-        alert('Invalid payment data. Please submit the form again.');
-        window.location.href = 'index.html#loan-form';
-        return;
-    }
-
-    const amountInPaise = Math.round(total * 100);
-    const successUrl = encodeURIComponent(`https://creditmasterfinancialservices.web.app/success.html?email=${encodeURIComponent(email)}`);
-    const paymentLink = `${RAZORPAY_PAYMENT_LINK}?amount=${amountInPaise}&prefill[name]=${encodeURIComponent(name)}&prefill[contact]=${encodeURIComponent(phone)}&prefill[email]=${encodeURIComponent(email)}&callback_url=${successUrl}`;
-    
+    const paymentLink = RAZORPAY_PAYMENT_LINK;
     console.log('Initiating payment with URL:', paymentLink);
     try {
         // Attempt redirect with multiple methods for compatibility

@@ -10,55 +10,11 @@
 <body>
     <div class="success-container">
         <h2>Payment Successful</h2>
-        <p>Processing your payment... Please wait.</p>
+        <p>Redirecting to homepage...</p>
     </div>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
-
-        // Parse URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentId = urlParams.get('razorpay_payment_id') || urlParams.get('payment_id');
-        const email = urlParams.get('email');
-
-        if (paymentId && email && paymentId.trim() !== '' && email.trim() !== '') {
-            const params = new URLSearchParams({
-                type: 'updatePayment',
-                email: email,
-                paymentStatus: 'Completed',
-                paymentId: paymentId
-            });
-
-            fetch(`${SCRIPT_URL}?${params.toString()}`, {
-                method: 'GET',
-                redirect: 'follow'
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Payment status updated successfully:', data);
-                    sessionStorage.removeItem('formData');
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1000);
-                } else {
-                    throw new Error(data.message || 'Failed to update payment status');
-                }
-            })
-            .catch(error => {
-                console.error('Error updating payment status:', error);
-                alert(`Payment successful, but failed to update status. Please contact support with payment ID: ${paymentId}`);
-                window.location.href = 'index.html';
-            });
-        } else {
-            console.error('Invalid payment data:', { paymentId, email });
-            alert('Invalid payment data. Please contact support at creditmaster500@gmail.com.');
-            window.location.href = 'index.html';
-        }
+        // Redirect to index.html immediately
+        window.location.href = 'index.html';
     </script>
 </body>
 </html>
