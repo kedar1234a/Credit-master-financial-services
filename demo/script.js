@@ -1,5 +1,5 @@
+
 let isEmailVerified = false;
-const RAZORPAY_KEY_ID = "rzp_test_R764bsWmz2bMol"; // Your Razorpay Key ID (public)
 
 function toggleMenu() {
     const menu = document.getElementById('nav-menu');
@@ -39,7 +39,7 @@ function sendOTP() {
     document.getElementById('send-otp').disabled = true;
     document.getElementById('send-otp').textContent = 'Sending OTP...';
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec'; // Ensure this is the correct deployed URL
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
 
     fetch(`${scriptUrl}?type=sendOTP&email=${encodeURIComponent(email)}`)
         .then(response => response.json())
@@ -147,35 +147,4 @@ function submitForm() {
 
     // Redirect to offer page
     window.location.href = 'offer.html';
-}
-function initiatePayment(processingFee) {
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
-
-    fetch(`${scriptUrl}?type=createOrder&amount=${processingFee}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                var options = {
-                    "key": RAZORPAY_KEY_ID,
-                    "amount": processingFee * 100,
-                    "currency": "INR",
-                    "name": "Credit Master",
-                    "description": "Loan Application Processing Fee",
-                    "order_id": data.order_id,
-                    "handler": function (response) {
-                        alert('Payment Successful! Payment ID: ' + response.razorpay_payment_id);
-                        // Additional submission logic can be added here
-                    },
-                    "theme": { "color": "#003087" }
-                };
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            } else {
-                alert('Error creating order: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error creating order:', error);
-            alert('Error initiating payment. Please try again.');
-        });
 }

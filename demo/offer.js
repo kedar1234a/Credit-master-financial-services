@@ -1,4 +1,4 @@
-const RAZORPAY_KEY_ID = "rzp_test_R764bsWmz2bMol"; // Your Razorpay Key ID (public)
+const RAZORPAY_PAYMENT_LINK = "https://razorpay.me/@creditmaster";
 
 function toggleMenu() {
     const menu = document.getElementById('nav-menu');
@@ -105,39 +105,8 @@ function populateOfferPage() {
 }
 
 function initiatePayment() {
-    const formData = JSON.parse(sessionStorage.getItem('formData'));
-    const total = formData.total;
-
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx1LsIHJYmrGy1xAVE0HNZpfyt296CUoRltgZLD-ndBDpInxOcEW47wKCXsV1S0rge1aA/exec';
-
-    fetch(`${scriptUrl}?type=createOrder&amount=${total}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                var options = {
-                    "key": RAZORPAY_KEY_ID,
-                    "amount": total * 100,
-                    "currency": "INR",
-                    "name": "Credit Master",
-                    "description": "Loan Application Processing Fee",
-                    "order_id": data.order_id,
-                    "handler": function (response) {
-                        alert('Payment Successful! Payment ID: ' + response.razorpay_payment_id);
-                        sessionStorage.removeItem('formData'); // Clear data after payment
-                        window.location.href = 'index.html#home';
-                    },
-                    "theme": { "color": "#3AAFA9" }
-                };
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            } else {
-                alert('Error creating order: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error creating order:', error);
-            alert('Error initiating payment. Please try again.');
-        });
+    // Redirect to the Razorpay payment link
+    window.location.href = RAZORPAY_PAYMENT_LINK;
 }
 
 // Initialize the page
