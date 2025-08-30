@@ -1,5 +1,3 @@
-const RAZORPAY_PAYMENT_LINK = 'https://razorpay.me/@creditmaster';
-
 function toggleMenu() {
     const menu = document.getElementById('nav-menu');
     if (menu) {
@@ -43,7 +41,7 @@ function populateOfferPage() {
         return;
     }
 
-    const requiredFields = ['name', 'email', 'phone', 'city', 'state', 'financialAmount', 'occupation', 'fee', 'gst', 'total'];
+    const requiredFields = ['name', 'email', 'phone', 'city', 'state', 'financialAmount', 'occupation', 'fee', 'total', 'paymentLink'];
     for (const field of requiredFields) {
         if (!formData[field]) {
             console.error(`Missing required field in formData: ${field}`);
@@ -53,13 +51,12 @@ function populateOfferPage() {
         }
     }
 
-    const { name, email, phone, city, state, financialAmount, occupation, fee, gst, total } = formData;
+    const { name, email, phone, city, state, financialAmount, occupation, fee, total, paymentLink } = formData;
 
     const elements = {
         'loan-amount': Number(financialAmount).toLocaleString('en-IN'),
         'fee-amount': Number(fee).toLocaleString('en-IN'),
         'base-fee': Number(fee).toLocaleString('en-IN'),
-        'gst-amount': Number(gst).toLocaleString('en-IN', { minimumFractionDigits: 2 }),
         'total-amount': Number(total).toLocaleString('en-IN'),
         'app-loan-amount': Number(financialAmount).toLocaleString('en-IN'),
         'app-name': name || 'N/A',
@@ -169,16 +166,21 @@ function initiatePayment() {
         return;
     }
 
-    const paymentLink = RAZORPAY_PAYMENT_LINK;
+    const { paymentLink } = formData;
+    if (!paymentLink) {
+        console.error('No paymentLink found in formData.');
+        alert('Payment link not found. Please submit the form again.');
+        window.location.href = 'index.html#loan-form';
+        return;
+    }
+
     console.log('Initiating payment with URL:', paymentLink);
     try {
-        // Attempt redirect with multiple methods for compatibility
         window.location.href = paymentLink;
-        window.location.assign(paymentLink); // Fallback for some browsers
-        // Provide fallback instructions in case redirect fails
+        window.location.assign(paymentLink);
         setTimeout(() => {
             alert(`Unable to redirect to payment page. Please manually visit this link to complete your payment: ${paymentLink}\nIf the issue persists, contact support at creditmaster500@gmail.com.`);
-        }, 2000); // Delay to allow redirect to attempt first
+        }, 2000);
     } catch (error) {
         console.error('Payment redirect failed:', error);
         alert(`Failed to redirect to payment page. Please manually visit this link to complete your payment: ${paymentLink}\nIf the issue persists, contact support at creditmaster500@gmail.com.`);

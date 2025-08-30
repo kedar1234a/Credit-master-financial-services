@@ -39,7 +39,7 @@ function sendOTP() {
     document.getElementById('send-otp').disabled = true;
     document.getElementById('send-otp').textContent = 'Sending OTP...';
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec';
     const params = new URLSearchParams({ type: 'sendOTP', email });
 
     fetch(`${scriptUrl}?${params.toString()}`, {
@@ -79,7 +79,7 @@ function verifyOTP() {
         return;
     }
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec';
     const params = new URLSearchParams({ type: 'verifyOTP', email, otp });
 
     fetch(`${scriptUrl}?${params.toString()}`, {
@@ -150,11 +150,11 @@ function submitForm() {
 
     const possibleFees = [199, 299];
     const fee = possibleFees[Math.floor(Math.random() * possibleFees.length)];
-    const gst = fee * 0.18;
-    const total = Math.round(fee + gst);
+    const total = fee; // GST removed, total is now equal to fee
+    const paymentLink = fee === 199 ? 'https://rzp.io/rzp/lYv5npxS' : 'https://rzp.io/rzp/6j5lhygd';
 
     const formData = {
-        type: 'formSubmission', // Added to fix "Invalid request type"
+        type: 'formSubmission',
         timestamp: new Date().toISOString(),
         name,
         email,
@@ -163,10 +163,11 @@ function submitForm() {
         state,
         financialAmount,
         occupation,
-        processingFee: total
+        processingFee: total,
+        paymentLink
     };
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec'; // Replace with your Google Apps Script URL
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbywsq0q210Jffw0rifS_jTHy3Z0KuIF5emRJvJzmGWsWsdBXvgNoNAFXVvdvFYz8bqbfg/exec';
     const params = new URLSearchParams(formData);
 
     fetch(`${scriptUrl}?${params.toString()}`, {
@@ -191,8 +192,8 @@ function submitForm() {
                     financialAmount,
                     occupation,
                     fee,
-                    gst,
-                    total
+                    total,
+                    paymentLink
                 }));
                 window.location.href = 'offer.html';
             } else {
